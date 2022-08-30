@@ -120,8 +120,8 @@ res.send({});
 // });
 // another method
 server.use('/', (req, res, next) => {
-    const filters = req.query;
-    const filteredUsers = user1.filter(user => {
+    var filters = req.query;
+    var filteredUsers = user1.filter(user => {
       let isValid = true;
       for (key in filters) {
         console.log(key, user[key], filters[key]);
@@ -133,9 +133,7 @@ server.use('/', (req, res, next) => {
   });
     
   
-  server.listen(5000, () => {
-    console.log('Server started!');
-  });
+  
 
 
 
