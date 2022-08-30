@@ -106,7 +106,48 @@ res.send({});
 
 // get filter 
 
+// server.get('/:id', function (req, res) {
+    
+//     var found = user1.find(function (item) {
+//         return item.id === parseInt(req.params.id);
+//     });
+    
+//     if (found) {
+//         res.status(200).json(found);
+//     } else {
+//         res.sendStatus(404);
+//     }
+// });
+// another method
+server.use('/', (req, res, next) => {
+    const filters = req.query;
+    const filteredUsers = user1.filter(user => {
+      let isValid = true;
+      for (key in filters) {
+        console.log(key, user[key], filters[key]);
+        isValid = isValid && user[key] == filters[key];
+      }
+      return isValid;
+    });
+    res.send(filteredUsers);
+  });
+    
+  
+  server.listen(5000, () => {
+    console.log('Server started!');
+  });
 
+
+
+
+
+
+
+
+
+
+
+//
 server.put('/:id', function (req, res) {
     
     var found = user1.find(function (item) {
