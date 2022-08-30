@@ -8,7 +8,17 @@ server.use(express.json())
 
 
 var users = [];
+// add array in multiple data (1 method)
+var user1 = [
+    { id: 1, name:'kamal',orderdetails: 'burgger',  order: 1, deliverd: true},
+    { id: 2, name:'aaaa', orderdetails: 'Pizza',     order: 2, deliverd: true},
+    { id: 3, name:'bbbb',orderdetails: 'Chicken fry', order: 3, deliverd: true},
+    { id: 4, name:'cccc',orderdetails: 'Momos',     order: 4, deliverd: false},
+    { id: 5, name:'dddd',orderdetails: 'Cocacola',   order: 5, deliverd: false},
+];
+// add array in (2 method)
 
+var data = [];
 
 
 var emailValidator = (req, res, next) =>  {
@@ -42,21 +52,48 @@ server.post("/register/users", (req, res) => {
     users.push(req.body);
     res.send("user register succesfully")
 });
+server.post("/register/data", (req, res) => {
+    
+    data.push(req.body);
+    res.send("user register succesfully")
+});
 server.put("/update/user", (req, res) => {
    
     users.push(req.body);
     res.send("user register succesfully")
 });
-server.get("/fetch/user", (req, res) => {
+server.get("/fetch/user",emailValidator, (req, res) => {
 
     res.send(users)
 });
 
-server.delete("/delete/user",(req,res) => {
-    users.pop(req.body);
-    res.send(users)
+server.get("/fetch/user1", (req, res) => {
 
-})
+    res.send(user1)
+});
+server.get("/fetch/user2", (req, res) => {
+
+    res.send(data)
+});
+//delete method
+
+server.delete('/:id', function (req, res) {
+    
+    var found = user1.find(function (item) {
+        return item.id === parseInt(req.params.id);
+    });
+
+    if (found) {
+        
+        var targetIndex = user1.indexOf(found);
+
+        user1.splice(targetIndex, 1);
+    }
+
+    
+    res.sendStatus(204);
+});
+
 server.get("/fetch/user/:id", (req, res) => {
     var id = req.params.id;
     users.forEach(u => {
@@ -65,6 +102,38 @@ server.get("/fetch/user/:id", (req, res) => {
         }
 })
 res.send({});
+});
+
+// get filter 
+
+
+server.put('/:id', function (req, res) {
+    
+    var found = user1.find(function (item) {
+        return item.id === parseInt(req.params.id);
+    });
+
+   
+    if (found) {
+        var updated = {
+            id: found.id,
+            name: req.body.name, 
+            orderdetails:req.body.orderdetails,
+            order: req.body.order,
+            deliverd: req.body.deliverd 
+        };
+
+        
+        var targetIndex = user1.indexOf(found);
+
+       
+        user1.splice(targetIndex, 1, updated);
+
+       
+        res.sendStatus(204);
+    } else {
+        res.sendStatus(404);
+    }
 });
 
 server.listen(4000, () => {
